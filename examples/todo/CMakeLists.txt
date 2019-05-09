@@ -8,7 +8,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_AUTOUIC ON)
+#set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_AUTORCC ON)
 
@@ -22,22 +22,24 @@ set(todo_SRCS
   qml.qrc
   )
 
-include(ExternalProject)
+#include(ExternalProject)
 
-ExternalProject_Add(QuickFlux
-  PREFIX "${PROJECT_BINARY_DIR}/QuickFlux-build"
-  SOURCE_DIR "${PROJECT_SOURCE_DIR}/../.."
-  CMAKE_ARGS "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-             "-DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}/QuickFlux"
-             "-DCMAKE_INSTALL_LIBDIR=${PROJECT_BINARY_DIR}/QuickFlux/lib"
-             "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-  )
+#ExternalProject_Add(QuickFlux
+#  PREFIX "${PROJECT_BINARY_DIR}/QuickFlux-build"
+#  SOURCE_DIR "${PROJECT_SOURCE_DIR}/../.."
+#  CMAKE_ARGS "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+#             "-DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}/QuickFlux"
+#             "-DCMAKE_INSTALL_LIBDIR=${PROJECT_BINARY_DIR}/QuickFlux/lib"
+#             "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+#  )
 
-link_directories("${PROJECT_BINARY_DIR}/QuickFlux/lib")
-include_directories("${PROJECT_BINARY_DIR}/QuickFlux/include/quickflux")
+#link_directories("${PROJECT_BINARY_DIR}/QuickFlux/lib")
+#include_directories("${PROJECT_BINARY_DIR}/QuickFlux/include/quickflux")
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/../.." "build_quickflux")
 
 add_executable(todo WIN32 ${todo_SRCS})
-add_dependencies(todo QuickFlux)
+#add_dependencies(todo QuickFlux)
 
-target_link_libraries(todo debug quickfluxd optimized quickflux)
-target_link_libraries(todo Qt5::Qml Qt5::Gui Qt5::Core Qt5::Quick)
+#target_link_libraries(todo debug quickfluxd optimized quickflux)
+target_link_libraries(todo Qt5::Qml Qt5::Gui Qt5::Core Qt5::Quick quickflux)
