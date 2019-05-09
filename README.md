@@ -1,5 +1,11 @@
 # A Flux implementation for QML
 
+VS2017的编译问题
+========
+  Error	C3615	constexpr function 'qCountLeadingZeroBits' cannot result in a constant expression (compiling source file main.cpp) in	qtcore\qalgorithms.h line 847
+  https://forum.qt.io/topic/93711/problem-with-new-visual-studio-update-2017-version-15-8-0-and-qt-5-9-5/8
+  https://codereview.qt-project.org/#/c/236948/2/src/corelib/tools/qalgorithms.h
+
 [![Build Status](https://travis-ci.org/benlau/quickflux.svg?branch=master)](https://travis-ci.org/benlau/quickflux)
 [![Build status](https://ci.appveyor.com/api/projects/status/hnwf8vg4o778hifq?svg=true)](https://ci.appveyor.com/project/benlau/quickflux)
 
