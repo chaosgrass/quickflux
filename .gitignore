@@ -40,3 +40,7 @@ vendor
 *.qmlc
 *.swp
 CMakeLists.txt.user
+/build.todo
+/build.middleware
+/build.photoalbum
+/build.quickflux
