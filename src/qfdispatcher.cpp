@@ -140,10 +140,78 @@ Store {
 
  */
 
+const char* JS_CODE = R"(
+
+//深度遍历QML对象树，缩进形式打印对象成员信息
+//用法：
+//    import "WisDebug.js" as WisDebug
+//    WisDebug.printObject(imageAdapter);
+//    console.log(s);
+function printObject(obj, level) {
+    var getLevelTab = function (level) {
+        var s = ""
+        for (var i = 0; i < level; ++i) {
+            s += "\t"
+        }
+        return s
+    }
+    var s = ""
+    if (isNaN(level))
+        level = 0
+    if (obj instanceof Function) {
+        s += "[code]"
+    } else if (obj instanceof Object) {
+        s += "\n"
+        s += getLevelTab(level)
+        s += "{\n"
+        for (var name in obj) {
+            var child = obj[name]
+            s += getLevelTab(level)
+            s += "\t"
+            s += name + "[" + typeof (child) + "]="
+            s += printObject(child, level + 1)
+            s += "\n"
+        }
+        s += getLevelTab(level)
+        s += "}"
+    } else if (typeof (obj) == "undefined") {
+        s += "[null]"
+    } else {
+        s += obj
+    }
+    //console.log(s)
+    return s
+}
+
+//对象反射：
+// 传入obj对象，打印出它的所有属性、信号、方法
+function reflectObject(obj) {
+    var keys = Object.keys(obj)
+    for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i]
+        console.log(key + ' : ' + obj[key])
+    }
+}
+)";
+
+#include <iostream>
+
 void QFDispatcher::dispatch(QString type, QJSValue message)
 {
     QF_PRECHECK_DISPATCH(m_engine.data(), type, message);
 
+    //define printObject function
+    QJSValue c_result = m_engine->evaluate(JS_CODE);
+    if (c_result.isError()) {
+        std::cout << "result: " << c_result.property("lineNumber").toInt() << ":" << c_result.toString().toStdString();
+    }
+    std::cout << "Dispatching " << type.toStdString() << ":" << message.toString().toStdString() << std::endl;
+    //print message object in javascript
+    m_engine->globalObject().setProperty("test_value", message);
+    QJSValue result = m_engine->evaluate("console.log(printObject(test_value))");
+    if (result.isError()) {
+        std::cout << "result: " << result.property("lineNumber").toInt() << ":" << result.toString().toStdString();
+    }
     auto process = [=](QString type, QJSValue message) {
         if (m_hook.isNull()) {
             send(type, message);
